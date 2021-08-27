@@ -1,4 +1,4 @@
-const  generateRandomString = function() {
+const generateRandomString = function () {
   const alphaNumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
   let randomShortUrl = "";
   for (let i = 0; i < 5; i++) {
@@ -13,7 +13,7 @@ const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
-app.use(cookieParser())
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
@@ -36,20 +36,31 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase, username: req.cookies["username"]};
+  const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = { username: req.cookies["username"]};
+  const templateVars = { username: req.cookies["username"] };
   res.render("urls_new", templateVars);
 });
+
+// app.get("/u/:shortURL", (req, res) => {
+//   const shortURL = req.params.shortURL;
+//   const longURL = urlDatabase[shortURL];
+//   res.redirect(longURL);
+// });
 
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL];
+  if (!longURL) {
+    res.send("Error: This is not a valid short URL")
+  }
   res.redirect(longURL);
 });
+
+
 
 app.get("/urls/:shortURL", (req, res) => {
 
@@ -82,13 +93,13 @@ app.post("/urls", (req, res) => {
   res.redirect(`urls/${shortURL}`);
 });
 
-app.post("/login", (req,res) => {
-  console.log("+++r req.body", req.body)
+app.post("/login", (req, res) => {
+ // console.log("+++r req.body", req.body)
   res.cookie('username', req.body.username)
   res.redirect("/urls")
 })
 
-app.post("/logout", (req,res) => {
+app.post("/logout", (req, res) => {
   //console.log("+++r req.body", req.body)
   //res.cookie('username', req.body.username)
   res.clearCookie('username')
