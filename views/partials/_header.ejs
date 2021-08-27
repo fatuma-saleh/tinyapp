@@ -12,7 +12,7 @@
     </div>
     
       <% if (username) {%>
-        <span style="margin-right: 15px;"><%= username %></span>
+        <span style="margin-right: 15px;">Logged In As: <b><%= username %></b></span>
        
         <form class="form-inline" action="/logout" method="POST">
           <div class="form-group mb-2">
@@ -24,7 +24,7 @@
         <form class="form-inline" action="/login" method="POST">
           <div class="form-group mb-2">
             <!-- <label for="username">Enter User Name:</label> -->
-            <input class="form-control" type="text" name="username" placeholder="Enter User Name:" style="width: 300px; margin: 1em">
+            <input class="form-control" type="text" name="username" placeholder="Enter User Name" style="width: 300px; margin: 1em">
             <button type="submit" class="btn btn-primary">Login</button>
           </div>
         </form>
