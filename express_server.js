@@ -1,11 +1,11 @@
-function generateRandomString() {
-  const alphaNumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
-  randomShortUrl = ""
+const  generateRandomString = function() {
+  const alphaNumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+  let randomShortUrl = "";
   for (let i = 0; i < 5; i++) {
-    randomShortUrl += alphaNumeric.charAt(Math.floor(Math.random() * alphaNumeric.length))
+    randomShortUrl += alphaNumeric.charAt(Math.floor(Math.random() * alphaNumeric.length));
   }
   return randomShortUrl;
-}
+};
 //console.log(generateRandomString())
 
 const express = require("express");
@@ -46,35 +46,40 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  const shortURL = req.params.shortURL
-  const longURL = urlDatabase[shortURL]
+  const shortURL = req.params.shortURL;
+  const longURL = urlDatabase[shortURL];
   res.redirect(longURL);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
 
-  const shortURL = req.params.shortURL
-  const longURL = urlDatabase[shortURL]
-  const templateVars = { shortURL, longURL }
+  const shortURL = req.params.shortURL;
+  const longURL = urlDatabase[shortURL];
+  const templateVars = { shortURL, longURL };
   res.render("urls_show", templateVars);
 
 });
 
-app.post("/urls/:shortURL/delete", (req,res) => {
-  console.log("+++")
-  shortURL = req.params.shortURL
-  delete urlDatabase[shortURL]
-  res.redirect("/urls")
-})
+app.post("/urls/:shortURL/delete", (req, res) => {
+  //console.log("+++")
+  const shortURL = req.params.shortURL;
+  delete urlDatabase[shortURL];
+  res.redirect("/urls");
+});
+
+app.post("/urls/:id", (req, res) => {
+  const shortURL = req.params.id;
+  const longURL = req.body.longURL;
+  urlDatabase[shortURL] = longURL;
+  res.redirect("/urls");
+});
 
 app.post("/urls", (req, res) => {
-  //console.log("++++",req.body);  // Log the POST request body to the console
-  //res.send("Ok");         // Respond with 'Ok' (we will replace this)
   const shortURL = generateRandomString();
-  const longURL = req.body.longURL
+  const longURL = req.body.longURL;
   urlDatabase[shortURL] = longURL;
   //console.log(urlDatabase);
-  res.redirect(`urls/${shortURL}`)
+  res.redirect(`urls/${shortURL}`);
 });
 
 app.listen(PORT, () => {
