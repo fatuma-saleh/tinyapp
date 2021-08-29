@@ -106,8 +106,18 @@ app.post("/logout", (req, res) => {
   res.redirect("/urls")
 })
 
+app.get("/register", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const templateVars = { email, password }
+  res.render("user-registration", templateVars);
+})
+// app.post("/register" ,(req, res) => {
+//   console.log("request",req)
+//   console.log("response",res)
+//})
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
+  console.log(`Listening on port ${PORT}!`);
 });
 
 
