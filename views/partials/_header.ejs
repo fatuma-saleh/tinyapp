@@ -11,8 +11,8 @@
       </div>
     </div>
     
-      <% if (username) {%>
-        <span style="margin-right: 15px;">Logged In As: <b><%= username %></b></span>
+      <% if (user) {%>
+        <span style="margin-right: 15px;">Logged In As:<b><%= user.email %></b></span>
        
         <form class="form-inline" action="/logout" method="POST">
           <div class="form-group mb-2">

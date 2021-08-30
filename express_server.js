@@ -48,12 +48,14 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
+  //const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
+  const templateVars = { urls: urlDatabase, user: users[req.cookies["user_id"]] }
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = { username: req.cookies["username"] };
+  //const templateVars = { username: req.cookies["username"] };
+  const templateVars = { user: users[req.cookies["user_id"]] };
   res.render("urls_new", templateVars);
 });
 
@@ -78,7 +80,10 @@ app.get("/urls/:shortURL", (req, res) => {
 
   const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL];
-  const templateVars = { shortURL, longURL, username: req.cookies["username"] };
+  //const templateVars = { shortURL, longURL, username: req.cookies["username"] };
+  const templateVars = { shortURL, longURL, user: users[req.cookies["user_id"]] }
+  console.log("++++",templateVars);
+
   res.render("urls_show", templateVars);
 
 });
@@ -126,12 +131,13 @@ app.post("/register" ,(req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   const userRandomId = generateRandomString();
-  users.id = userRandomId;
-  users.email = email;
-  users.password = password;
+  const newUser = { id: userRandomId,
+  email:  email,
+  password: password }
+  users[userRandomId] = newUser;
   res.cookie('user_id', userRandomId)
   res.redirect("/urls");
-  //console.log("++++",users)
+  console.log("++++",users)
 })
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}!`);
