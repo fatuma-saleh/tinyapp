@@ -6,6 +6,15 @@ const generateRandomString = function () {
   }
   return randomShortUrl;
 };
+
+const isEmailExists = function(emailAddress){
+ for(user in users){
+   if(users[user].email === emailAddress){
+     return true;
+   }
+ }
+ return false;
+}
 //console.log(generateRandomString())
 
 const express = require("express");
@@ -132,13 +141,22 @@ app.post("/register" ,(req, res) => {
   const password = req.body.password;
   const userRandomId = generateRandomString();
   const newUser = { id: userRandomId,
-  email:  email,
+  email: email,
   password: password }
-  users[userRandomId] = newUser;
+  
+  if(email === "" || password === ""){
+    res.send("Error:  Enter all fields")
+  }
+  if(isEmailExists(email)){
+    res.send("Error 400 :  Email already exists")
+  } else {
+  users[userRandomId] = newUser;  
   res.cookie('user_id', userRandomId)
   res.redirect("/urls");
   console.log("++++",users)
+  }
 })
+
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}!`);
 });
