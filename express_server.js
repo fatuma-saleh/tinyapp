@@ -157,6 +157,10 @@ app.post("/register" ,(req, res) => {
   }
 })
 
+app.get("/login", (req, res) => {
+  res.render("user-login");
+})
+
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}!`);
 });
