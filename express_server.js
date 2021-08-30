@@ -22,6 +22,18 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+  "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+}
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -107,15 +119,20 @@ app.post("/logout", (req, res) => {
 })
 
 app.get("/register", (req, res) => {
+  res.render("user-registration");
+})
+
+app.post("/register" ,(req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  const templateVars = { email, password }
-  res.render("user-registration", templateVars);
+  const userRandomId = generateRandomString();
+  users.id = userRandomId;
+  users.email = email;
+  users.password = password;
+  res.cookie('user_id', userRandomId)
+  res.redirect("/urls");
+  //console.log("++++",users)
 })
-// app.post("/register" ,(req, res) => {
-//   console.log("request",req)
-//   console.log("response",res)
-//})
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}!`);
 });
