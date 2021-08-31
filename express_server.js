@@ -68,22 +68,15 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new", templateVars);
 });
 
-// app.get("/u/:shortURL", (req, res) => {
-//   const shortURL = req.params.shortURL;
-//   const longURL = urlDatabase[shortURL];
-//   res.redirect(longURL);
-// });
 
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL];
   if (!longURL) {
-    res.send("Error: This is not a valid short URL")
+    return res.status(400).send("This is not a valid short URL")
   }
   res.redirect(longURL);
 });
-
-
 
 app.get("/urls/:shortURL", (req, res) => {
 
@@ -127,11 +120,11 @@ app.post("/login", (req, res) => {
   const user = isEmailExists(email);
 
   if (!user) {
-    return res.status(400).send("User not found")
+    return res.status(403).send("User not found")
   }
 
   if (user.password !== password ){
-    return res.status(400).send("Invalid login")
+    return res.status(403).send("Invalid login")
   }
 
     res.cookie('user_id', user.id)
