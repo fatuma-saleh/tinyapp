@@ -7,13 +7,13 @@ const generateRandomString = function () {
   return randomShortUrl;
 };
 
-const isEmailExists = function(emailAddress){
- for(user in users){
-   if(users[user].email === emailAddress){
-     return true;
-   }
- }
- return false;
+const isEmailExists = function (emailAddress) {
+  for (user in users) {
+    if (users[user].email === emailAddress) {
+      return users[user];
+    }
+  }
+  return false;
 }
 //console.log(generateRandomString())
 
@@ -31,15 +31,15 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-const users = { 
+const users = {
   "userRandomID": {
-    id: "userRandomID", 
-    email: "user@example.com", 
+    id: "userRandomID",
+    email: "user@example.com",
     password: "purple-monkey-dinosaur"
   },
   "user2RandomID": {
-    id: "user2RandomID", 
-    email: "user2@example.com", 
+    id: "user2RandomID",
+    email: "user2@example.com",
     password: "dishwasher-funk"
   }
 }
@@ -91,7 +91,7 @@ app.get("/urls/:shortURL", (req, res) => {
   const longURL = urlDatabase[shortURL];
   //const templateVars = { shortURL, longURL, username: req.cookies["username"] };
   const templateVars = { shortURL, longURL, user: users[req.cookies["user_id"]] }
-  console.log("++++",templateVars);
+  console.log("++++", templateVars);
 
   res.render("urls_show", templateVars);
 
@@ -120,45 +120,62 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
- // console.log("+++r req.body", req.body)
-  res.cookie('username', req.body.username)
-  res.redirect("/urls")
+  // console.log("+++r req.body", req.body)
+  //res.cookie('username', req.body.username)
+  const email = req.body.email;
+  const password = req.body.password;
+  const user = isEmailExists(email);
+
+  if (!user) {
+    return res.status(400).send("User not found")
+  }
+
+  if (user.password !== password ){
+    return res.status(400).send("Invalid login")
+  }
+
+    res.cookie('user_id', user.id)
+    res.redirect("/urls")
+
 })
 
 app.post("/logout", (req, res) => {
   //console.log("+++r req.body", req.body)
   //res.cookie('username', req.body.username)
-  res.clearCookie('username')
+  // res.clearCookie('username')
+  // res.redirect("/urls")
+  res.clearCookie("user_id");
   res.redirect("/urls")
+
 })
 
 app.get("/register", (req, res) => {
-  res.render("user-registration");
+  res.render("user_registration");
 })
 
-app.post("/register" ,(req, res) => {
+app.post("/register", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  const userRandomId = generateRandomString();
-  const newUser = { id: userRandomId,
-  email: email,
-  password: password }
-  
-  if(email === "" || password === ""){
-    res.send("Error:  Enter all fields")
+  if (email === "" || password === "") {
+    return res.status(400).send("Enter all fields")
   }
-  if(isEmailExists(email)){
-    res.send("Error 400 :  Email already exists")
-  } else {
-  users[userRandomId] = newUser;  
+
+  if (isEmailExists(email)) {
+    return res.status(400).send("Email already exists")
+  }
+
+  const userRandomId = generateRandomString();
+  const newUser = { id: userRandomId, email, password }
+  
+  users[userRandomId] = newUser;
   res.cookie('user_id', userRandomId)
   res.redirect("/urls");
-  console.log("++++",users)
-  }
+  //console.log("++++",users)
+
 })
 
 app.get("/login", (req, res) => {
-  res.render("user-login");
+  res.render("user_login");
 })
 
 app.listen(PORT, () => {
