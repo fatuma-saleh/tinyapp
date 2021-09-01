@@ -52,6 +52,7 @@ const users = {
     id: "aJ48lW",
     email: "a@a.com",
     password: "1111"
+    
   },
   "user2RandomID": {
     id: "user2RandomID",
@@ -190,16 +191,21 @@ app.post("/login", (req, res) => {
   // const email = req.body.email;
   // const password = req.body.password;
   const { email, password } = req.body;
+  
   const user = isEmailExists(email);
 
   if (!user) {
     return res.status(403).send("User not found")
   }
 
-  if (user.password !== password ){
+  // if (user.password !== password ){
+  //   return res.status(403).send("Invalid password")
+  // }
+
+  if (!bcrypt.compareSync(password, user.password)){
     return res.status(403).send("Invalid password")
   }
-
+    console.log(user)
     res.cookie('user_id', user.id)
     res.redirect("/urls")
 
@@ -223,6 +229,7 @@ app.post("/register", (req, res) => {
   // const email = req.body.email;
   // const password = req.body.password;
   const { email, password } = req.body;
+  const hashedPassword = bcrypt.hashSync(password,10);
   if (email === "" || password === "") {
     return res.status(400).send("Enter all fields")
   }
@@ -232,7 +239,7 @@ app.post("/register", (req, res) => {
   }
 
   const userRandomId = generateRandomString();
-  const newUser = { id: userRandomId, email, password }
+  const newUser = { id: userRandomId, email, password: hashedPassword }
   users[userRandomId] = newUser;
   res.cookie('user_id', userRandomId)
   res.redirect("/urls");
