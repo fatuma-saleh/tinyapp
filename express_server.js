@@ -28,6 +28,7 @@ const urlsForUser = function (userID,urlDatabase){
 //console.log(generateRandomString())
 
 const express = require("express");
+const bcrypt = require('bcrypt');
 const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
