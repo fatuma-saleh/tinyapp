@@ -15,6 +15,19 @@ const isEmailExists = function (emailAddress) {
   }
   return false;
 }
+
+const urlsForUser = function (userID,urlDatabase){
+  const keys = Object.keys(urlDatabase);
+  let newUrls = keys.filter((key) => {
+    const value = urlDatabase[key];
+    return value.userID === userID
+  })
+  const obj ={};
+  for(let url of newUrls){
+    obj[url] = urlDatabase[url];
+  }
+  return obj;
+}
 //console.log(generateRandomString())
 
 const express = require("express");
@@ -37,15 +50,15 @@ const urlDatabase = {
 };
 
 const users = {
-  "userRandomID": {
-    id: "userRandomID",
+  "aJ48lW": {
+    id: "aJ48lW",
     email: "a@a.com",
     password: "1111"
   },
   "user2RandomID": {
     id: "user2RandomID",
-    email: "user2@example.com",
-    password: "dishwasher-funk"
+    email: "b@b.com",
+    password: "2222"
   }
 }
 
@@ -63,8 +76,14 @@ app.get("/hello", (req, res) => {
 
 app.get("/urls", (req, res) => {
   //const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
-  const templateVars = { urls: urlDatabase, user: users[req.cookies["user_id"]] }
-  res.render("urls_index", templateVars);
+  const userID = req.cookies["user_id"];
+  console.log(req.cookies);
+  if (req.cookies["user_id"]){
+    //const templateVars = { urls: urlDatabase, user: users[req.cookies["user_id"]] }
+    const templateVars = { urls: urlsForUser(userID,urlDatabase) , user: users[req.cookies["user_id"]] }
+    return res.render("urls_index", templateVars);
+  }
+  return res.redirect("/login")
 });
 
 app.get("/urls/new", (req, res) => {
@@ -99,10 +118,19 @@ app.get("/urls/:shortURL", (req, res) => {
 
   const shortURL = req.params.shortURL;
   const urlObj = urlDatabase[shortURL]
-  console.log("++++++++", urlObj)
-  if (!urlObj) {
-    return res.status(400).send("This is not a valid short URL")
-  }
+ //console.log("++++++++", urlObj)
+ const userID = req.cookies["user_id"]
+ if (!userID){
+   return res.redirect("/login");
+ }
+ if (!urlObj){
+    return res.status(400).send("The urls does not exist");
+ }
+
+ if (urlObj.userID !== userID){
+   return res.status(400).send("You can not change this url");
+ }
+   
   
   const longURL = urlObj.longURL;
   //const templateVars = { shortURL, longURL, username: req.cookies["username"] };
