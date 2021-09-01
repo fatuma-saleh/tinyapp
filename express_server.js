@@ -17,14 +17,11 @@ const isEmailExists = function (emailAddress) {
 }
 
 const urlsForUser = function (userID,urlDatabase){
-  const keys = Object.keys(urlDatabase);
-  let newUrls = keys.filter((key) => {
-    const value = urlDatabase[key];
-    return value.userID === userID
-  })
   const obj ={};
-  for(let url of newUrls){
-    obj[url] = urlDatabase[url];
+  for (const shortURL in urlDatabase) {
+    if (urlDatabase[shortURL].userID === userID) {
+       obj[shortURL] = urlDatabase[shortURL]; 
+    }
   }
   return obj;
 }
@@ -141,10 +138,20 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  //console.log("+++")
+  
+  //const shortURL = req.params.shortURL;
   const shortURL = req.params.shortURL;
+  const longURL = req.body.longURL;
+  const userID = req.cookies["user_id"]
+  //console.log("++++",userID)
+  const urlObj = urlDatabase[shortURL];
+  //console.log("++++",urlObj)
+  if (urlObj.userID !== userID){
+    return res.status(400).send("You can not delete this url");
+  }else{
   delete urlDatabase[shortURL];
   res.redirect("/urls");
+  }
 });
 
 app.post("/urls/:id", (req, res) => {
