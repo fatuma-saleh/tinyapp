@@ -7,8 +7,6 @@ const generateRandomString = function () {
   return randomShortUrl;
 };
 
-
-
 const urlsForUser = function (userID,urlDatabase){
   const obj ={};
   for (const shortURL in urlDatabase) {
