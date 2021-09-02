@@ -7,14 +7,7 @@ const generateRandomString = function () {
   return randomShortUrl;
 };
 
-const isEmailExists = function (emailAddress) {
-  for (user in users) {
-    if (users[user].email === emailAddress) {
-      return users[user];
-    }
-  }
-  return false;
-}
+
 
 const urlsForUser = function (userID,urlDatabase){
   const obj ={};
@@ -26,7 +19,7 @@ const urlsForUser = function (userID,urlDatabase){
   return obj;
 }
 //console.log(generateRandomString())
-
+const getUserByEmail = require('./helpers');
 const express = require("express");
 const bcrypt = require('bcrypt');
 const app = express();
@@ -203,10 +196,10 @@ app.post("/login", (req, res) => {
   // const password = req.body.password;
   const { email, password } = req.body;
   
-  const user = isEmailExists(email);
+  const user = getUserByEmail(email,users);
 
   if (!user) {
-    return res.status(403).send("User not found")
+    return res.status(403).send("User not found:Please register")
   }
 
   // if (user.password !== password ){
@@ -247,7 +240,7 @@ app.post("/register", (req, res) => {
     return res.status(400).send("Enter all fields")
   }
 
-  if (isEmailExists(email)) {
+  if (getUserByEmail(email,users)) {
     return res.status(400).send("Email already exists")
   }
 
