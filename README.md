@@ -5,17 +5,17 @@ TinyApp is a web application that allows users to shorten long URLs, much like T
 ## Steps on how to use TinyApp
 
 - Run TinyApp from the server side using the `npm start` command.
-- Go to yor browser and navigate to http://localhost:8080/register to register
+- Go to your browser and navigate to http://localhost:8080/register to register
 - Once you are registered you can create shorturls by providing longurls.
-- Users can edit or delete only the  urls that they created.
+- Users can edit or delete only the urls that they created.
 
 
 
 ![The Login page](./images/login.png)
 
-![Show Urls](./images/new_Urls.png)
+![New Urls](./images/new_Urls.png)
 
-![New Urls](./images/my_Urls.png)
+![Show Urls](./images/my_Urls.png)
 
 
  
