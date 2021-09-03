@@ -1,5 +1,5 @@
 const { assert } = require('chai');
-const { getUserByEmail, urlsForUser }  = require('../helpers.js');
+const { getUserByEmail, urlsForUser,generateRandomString }  = require('../helpers.js');
 
 const testUsers = {
   "userRandomID": {
@@ -48,3 +48,16 @@ describe('urlsForUser', function() {
   });
 });
 
+
+describe('generateRandomString', function() {
+  it('should return a string', function() {
+    const randomString = generateRandomString();
+    assert.isString(randomString);
+  });
+
+  it('should return random string of length six', function() {
+    const randomString = generateRandomString();
+    const expectedOutput = 6;
+    assert.equal(randomString.length,expectedOutput);
+  });
+});

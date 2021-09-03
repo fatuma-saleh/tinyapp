@@ -11,9 +11,11 @@ TinyApp is a web application that allows users to shorten long URLs, much like T
 
 
 
-![The Login page!](images/Login.png)
-![Show Urls!](images/newUrls.png)
-![New Urls!](images/Urls.png)
+![The Login page](./images/Login.png)
+
+![Show Urls](./images/newUrls.png)
+
+![New Urls](./images/Urls.png)
 
 
  
