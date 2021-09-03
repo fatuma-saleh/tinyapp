@@ -1,23 +1,24 @@
-const generateRandomString = function () {
-  const alphaNumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-  let randomShortUrl = "";
-  for (let i = 0; i < 5; i++) {
-    randomShortUrl += alphaNumeric.charAt(Math.floor(Math.random() * alphaNumeric.length));
-  }
-  return randomShortUrl;
-};
+// const generateRandomString = function () {
+//   const alphaNumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+//   let randomShortUrl = "";
+//   for (let i = 0; i < 5; i++) {
+//     randomShortUrl += alphaNumeric.charAt(Math.floor(Math.random() * alphaNumeric.length));
+//   }
+//   return randomShortUrl;
+// };
 
-const urlsForUser = function (userID,urlDatabase){
-  const obj ={};
-  for (const shortURL in urlDatabase) {
-    if (urlDatabase[shortURL].userID === userID) {
-       obj[shortURL] = urlDatabase[shortURL]; 
-    }
-  }
-  return obj;
-}
+// const urlsForUser = function (userID,urlDatabase){
+//   const obj ={};
+//   for (const shortURL in urlDatabase) {
+//     if (urlDatabase[shortURL].userID === userID) {
+//        obj[shortURL] = urlDatabase[shortURL]; 
+//     }
+//   }
+//   return obj;
+// }
 //console.log(generateRandomString())
-const getUserByEmail = require('./helpers');
+const { getUserByEmail, generateRandomString, urlsForUser } = require('./helpers');
+//const generateRandomString = require('./helpers');
 const express = require("express");
 const bcrypt = require('bcrypt');
 const app = express();
@@ -28,9 +29,7 @@ var cookieSession = require('cookie-session')
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2'],
-
-  // Cookie Options
-  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  //maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
 //app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
