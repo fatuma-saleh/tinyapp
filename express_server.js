@@ -1,6 +1,6 @@
 
 ////////////////////////////////////////////
-///CONSTANTS, LIBRARIES, MODULES AND MIDDLEWARE ///
+///CONSTANTS, LIBRARIES  AND MIDDLEWARE ///
 ///////////////////////////////////////////////
 
 const { getUserByEmail, generateRandomString, urlsForUser } = require('./helpers');
@@ -12,8 +12,6 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 const PORT = 8080;
-//const cookieParser = require('cookie-parser');
-//app.use(cookieParser());
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2'],
@@ -23,6 +21,7 @@ const urlDatabase = {
   b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
   i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
 };
+
 const users = {};
 
 
@@ -69,7 +68,6 @@ app.get("/u/:shortURL", (req, res) => {
     return res.status(400).send("This is not a valid short URL");
   }
   const longURL = urlObj.longURL;
-  //const userID = urlObj.userID;
   res.redirect(longURL);
 
 });
@@ -110,7 +108,6 @@ app.get("/login", (req, res) => {
 
 app.post("/urls/:shortURL/delete", (req, res) => {
   const shortURL = req.params.shortURL;
-  //const longURL = req.body.longURL;
   const userID = req.session["user_id"];
   const urlObj = urlDatabase[shortURL];
   if (urlObj.userID !== userID) {
