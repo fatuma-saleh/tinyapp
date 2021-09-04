@@ -14,6 +14,8 @@ const testUsers = {
   }
 };
 
+// Test cases for getUserByEmail function
+
 describe('getUserByEmail', function() {
   it('should return a user with valid email', function() {
     const user = getUserByEmail("user@example.com", testUsers);
@@ -22,8 +24,6 @@ describe('getUserByEmail', function() {
   });
   it('should return undefined for non existing email', function() {
     const user = getUserByEmail("user3@example.com", testUsers);
-    // const expectedOutput = null;
-    // assert.equal(null,expectedOutput)
     assert.isNull(user);
   });
 });
@@ -33,6 +33,7 @@ const urlDatabase = {
   i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
 };
 
+//Test cases for urlsForUser function
 
 describe('urlsForUser', function() {
   it('should return urls that belong to the userID', function() {
@@ -44,10 +45,11 @@ describe('urlsForUser', function() {
     const userUrls = getUserByEmail("b7yiA3", urlDatabase);
     const expectedOutput = undefined;
     assert.equal(userUrls,expectedOutput);
-    //assert.isNull(user)
+    
   });
 });
 
+//Test cases for generateRandomString function
 
 describe('generateRandomString', function() {
   it('should return a string', function() {
