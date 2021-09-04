@@ -129,6 +129,7 @@ app.post("/urls/:id", (req, res) => {
   if (!urlObj) {
     return res.status(400).send("The urls does not exist");
   }
+  
 
   if (urlObj.userID !== userID) {
     return res.status(400).send("You can not change this url");
@@ -141,6 +142,9 @@ app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
   const longURL = req.body.longURL;
   const userID = req.session["user_id"];
+  if(longURL === ""){
+    return res.status(400).send("Enter URL");
+  }
   urlDatabase[shortURL] = { longURL, userID };
   res.redirect(`urls/${shortURL}`);
 });
