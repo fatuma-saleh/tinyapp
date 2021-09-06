@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 //Generates and returns  a six digit random string
 
 const generateRandomString = function() {
@@ -9,6 +11,16 @@ const generateRandomString = function() {
   return randomShortUrl;
 };
 
+//Creates and returns new user
+
+const createNewUser = function(email,password) {
+  const userRandomId = generateRandomString();
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  const newUser = { id: userRandomId, email, password: hashedPassword };
+  return newUser;
+};
+
+
 //checks for a user in users database with the  provided email and if found returns the user
 
 const getUserByEmail = function(email,users) {
@@ -19,6 +31,19 @@ const getUserByEmail = function(email,users) {
   }
   return null;
 };
+
+// authenticates and returns a valid  user
+
+const authenticateUser = function(email,password,users) {
+  const user = getUserByEmail(email,users);
+  if (user) {
+    if (bcrypt.compareSync(password, user.password)) {
+      return user;
+    }
+  }
+  return null;
+};
+
 
 //returns urls for the user with the provided userID
 
@@ -32,4 +57,4 @@ const urlsForUser = function(userID,urlDatabase) {
   return urlsForUserObj;
 };
 
-module.exports =  { getUserByEmail, generateRandomString, urlsForUser };
+module.exports =  { getUserByEmail, generateRandomString, urlsForUser, authenticateUser, createNewUser };

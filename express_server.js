@@ -3,9 +3,8 @@
 ///CONSTANTS, LIBRARIES  AND MIDDLEWARE ///
 ///////////////////////////////////////////////
 
-const { getUserByEmail, generateRandomString, urlsForUser } = require('./helpers');
+const { getUserByEmail, generateRandomString, urlsForUser, authenticateUser, createNewUser } = require('./helpers');
 const express = require("express");
-const bcrypt = require('bcrypt');
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
 const app = express();
@@ -139,25 +138,21 @@ app.post("/urls/:id", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  const shortURL = generateRandomString();
   const longURL = req.body.longURL;
-  const userID = req.session["user_id"];
-  if(longURL === ""){
+  if (longURL === "") {
     return res.status(400).send("Enter URL");
   }
+  const shortURL = generateRandomString();
+  const userID = req.session["user_id"];
   urlDatabase[shortURL] = { longURL, userID };
   res.redirect(`urls/${shortURL}`);
 });
 
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
-  const user = getUserByEmail(email, users);
-  if (!user) {
-    return res.status(403).send("User not found:Please register");
-  }
-
-  if (!bcrypt.compareSync(password, user.password)) {
-    return res.status(403).send("Invalid password");
+  const user = authenticateUser(email, password, users);
+  if (!user)  {
+    return res.status(403).send("User not found");
   }
   req.session['user_id'] = user.id;
   res.redirect("/urls");
@@ -171,7 +166,6 @@ app.post("/logout", (req, res) => {
 
 app.post("/register", (req, res) => {
   const { email, password } = req.body;
-  const hashedPassword = bcrypt.hashSync(password, 10);
   if (email === "" || password === "") {
     return res.status(400).send("Enter all fields");
   }
@@ -179,11 +173,9 @@ app.post("/register", (req, res) => {
   if (getUserByEmail(email, users)) {
     return res.status(400).send("Email already exists");
   }
-
-  const userRandomId = generateRandomString();
-  const newUser = { id: userRandomId, email, password: hashedPassword };
-  users[userRandomId] = newUser;
-  req.session['user_id'] = userRandomId;
+  const newUser = createNewUser(email,password);
+  users[newUser.id] = newUser;
+  req.session['user_id'] = newUser.id;
   res.redirect("/urls");
 });
 
